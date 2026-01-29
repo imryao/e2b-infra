@@ -10,8 +10,10 @@ import (
 )
 
 const (
-	lockTimeout   = time.Minute
-	retryInterval = 20 * time.Millisecond
+	lockTimeout        = time.Minute
+	transitionKeyTTL   = 70 * time.Second // Should be longer than the longest expected state transition time
+	errorTransitionTTL = 5 * time.Second  // How long error stays for waiters to see
+	retryInterval      = 20 * time.Millisecond
 )
 
 var _ sandbox.Storage = (*Storage)(nil)
