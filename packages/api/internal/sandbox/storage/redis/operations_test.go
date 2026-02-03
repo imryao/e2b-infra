@@ -516,7 +516,7 @@ func TestStartRemoving_CallbackSetsErrorOnFailure(t *testing.T) {
 	// Transition key should have error value with TTL
 	value, err := client.Get(ctx, transitionKey).Result()
 	require.NoError(t, err)
-	assert.Equal(t, `{"error":"test error"}`, value)
+	assert.JSONEq(t, `{"error":"test error"}`, value)
 
 	ttl, err := client.TTL(ctx, transitionKey).Result()
 	require.NoError(t, err)
@@ -673,6 +673,7 @@ func TestStartRemoving_DifferentExecutionID(t *testing.T) {
 	_, err = storage.Update(ctx, sbx.TeamID, sbx.SandboxID, func(s sandbox.Sandbox) (sandbox.Sandbox, error) {
 		s.ExecutionID = newExecID
 		s.State = sandbox.StateRunning
+
 		return s, nil
 	})
 	require.NoError(t, err)
