@@ -303,17 +303,17 @@ func (s *Storage) StartRemoving(ctx context.Context, teamID uuid.UUID, sandboxID
 		return false, nil, fmt.Errorf("failed to update sandbox state: %w", err)
 	}
 
-	logger.L().Debug(ctx, "Started state transition", logger.WithSandboxID(sandboxID), zap.String("state", string(newState)), zap.String("execID", sbx.ExecutionID))
+	logger.L().Debug(ctx, "Started state transition", logger.WithSandboxID(sandboxID), zap.String("state", string(newState)))
 
-	return false, s.createCallback(sandboxID, transitionKey, sbx.ExecutionID, newState), nil
+	return false, s.createCallback(sandboxID, transitionKey, newState), nil
 }
 
 // createCallback returns a callback function for completing a transition.
 // On success, the callback deletes the transition key.
 // On error, the callback sets an error value with short TTL for waiters to see.
-func (s *Storage) createCallback(sandboxID, transitionKey, execID string, state sandbox.State) func(context.Context, error) {
+func (s *Storage) createCallback(sandboxID, transitionKey string, state sandbox.State) func(context.Context, error) {
 	return func(cbCtx context.Context, err error) {
-		logger.L().Debug(cbCtx, "Transition complete", logger.WithSandboxID(sandboxID), zap.String("state", string(state)), zap.String("execID", execID), zap.Error(err))
+		logger.L().Debug(cbCtx, "Transition complete", logger.WithSandboxID(sandboxID), zap.String("state", string(state)), zap.Error(err))
 
 		lock, lockErr := s.lockService.Obtain(cbCtx, redis_utils.GetLockKey(transitionKey), lockTimeout, s.lockOption)
 		if lockErr != nil {

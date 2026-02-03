@@ -669,9 +669,7 @@ func TestStartRemoving_DifferentExecutionID(t *testing.T) {
 	assert.Equal(t, int64(0), exists)
 
 	// Simulate resume: update sandbox with new ExecutionID and Running state
-	newExecID := uuid.New().String()
 	_, err = storage.Update(ctx, sbx.TeamID, sbx.SandboxID, func(s sandbox.Sandbox) (sandbox.Sandbox, error) {
-		s.ExecutionID = newExecID
 		s.State = sandbox.StateRunning
 
 		return s, nil
