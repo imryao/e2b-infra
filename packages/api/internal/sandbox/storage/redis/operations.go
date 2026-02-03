@@ -376,7 +376,7 @@ func (s *Storage) waitForTransition(ctx context.Context, teamID uuid.UUID, sandb
 
 		// Check if it's an error value (JSON with "error" field)
 		var transErr transitionError
-		if json.Unmarshal([]byte(value), &transErr) != nil {
+		if err = json.Unmarshal([]byte(value), &transErr); err != nil {
 			return fmt.Errorf("failed to unmarshal transition error: %w", err)
 		}
 
