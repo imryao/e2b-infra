@@ -4,7 +4,9 @@ ENV := $(shell cat ../../.last_used_env || echo "not-set")
 goose := GOOSE_DBSTRING=$(POSTGRES_CONNECTION_STRING) go tool goose -table "_migrations" -dir "migrations" postgres
 goose-local := GOOSE_DBSTRING=postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable go tool goose -table "_migrations" -dir "migrations" postgres
 
-ifeq ($(PROVIDER),aws)
+ifdef IMAGE_REGISTRY_BASE
+	IMAGE_REGISTRY := $(IMAGE_REGISTRY_BASE)/db-migrator
+else ifeq ($(PROVIDER),aws)
 	IMAGE_REGISTRY := $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(PREFIX)orchestration/db-migrator
 else
 	IMAGE_REGISTRY := $(GCP_REGION)-docker.pkg.dev/$(GCP_PROJECT_ID)/e2b-orchestration/db-migrator

@@ -3,7 +3,9 @@ ENV := $(shell cat ../../.last_used_env || echo "not-set")
 
 CLICKHOUSE_HOST ?= clickhouse
 
-ifeq ($(PROVIDER),aws)
+ifdef IMAGE_REGISTRY_BASE
+	CLICKHOUSE_MIGRATOR_IMAGE ?= $(IMAGE_REGISTRY_BASE)/clickhouse-migrator
+else ifeq ($(PROVIDER),aws)
 	CLICKHOUSE_MIGRATOR_IMAGE ?= $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(PREFIX)orchestration/clickhouse-migrator
 else
 	CLICKHOUSE_MIGRATOR_IMAGE ?= $(GCP_REGION)-docker.pkg.dev/$(GCP_PROJECT_ID)/e2b-orchestration/clickhouse-migrator
