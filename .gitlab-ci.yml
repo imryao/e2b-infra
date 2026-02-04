@@ -1,6 +1,3 @@
-include:
-  - component: $CI_SERVER_FQDN/components/code-quality-oss/codequality-os-scanners-integration/golangci@1.1.8
-
 stages:
   - lint
   - test-and-build
