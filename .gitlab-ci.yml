@@ -23,6 +23,8 @@ test:
   image: golang
   needs:
     - lint
+  before_script:
+    - apt-get update && apt-get install -y jq
   script:
     - make test
   rules:
