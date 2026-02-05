@@ -47,7 +47,7 @@ build:
     DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
     IMAGE_REGISTRY_BASE: "registry.nj.cs.ac.cn/e2b"
   before_script:
-    - apk add --no-cache make jq
+    - apk add --no-cache make jq bash
     - until docker info; do sleep 1; done
   script:
     - make build-and-upload
